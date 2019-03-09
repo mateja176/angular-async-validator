@@ -23,3 +23,7 @@
 ## Pros
 
 - The error message can help the user while they are typing
+
+## Cons of debounceTime and distinctUntilChange
+
+- Prone to missing timing when observing 2 or more properties
