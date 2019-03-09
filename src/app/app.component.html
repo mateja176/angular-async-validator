@@ -2,7 +2,7 @@
   ℹ️ {{ fieldName }} is required
 </ng-template>
 
-<form [formGroup]="myForm">
+<form [formGroup]="myForm" (ngSubmit)="submit($event)">
   <label>
     {{ required.name }}Name:
     <input type="text" formControlName="name" />

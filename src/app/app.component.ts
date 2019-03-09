@@ -67,6 +67,10 @@ export class AppComponent implements OnInit {
     this.errors$.subscribe(console.log);
   }
 
+  submit() {
+    console.log(this.myForm.value);
+  }
+
   getName() {
     return this.myForm.get('name');
   }
