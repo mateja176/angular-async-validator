@@ -10,15 +10,15 @@
 
   <br />
 
-  <ng-container *ngIf="getName().errors?.required && getName().dirty">
+  <ng-container *ngIf="(errors$ | async)?.name.required && getName().dirty">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
     ></ng-container>
   </ng-container>
 
-  <div *ngIf="getName().errors?.minlength">
+  <div *ngIf="(errors$ | async)?.name.minlength">
     Name has to be at least
-    {{ getName().errors?.minlength?.requiredLength }} characters long
+    {{ (errors$ | async)?.name.minlength?.requiredLength }} characters long
   </div>
 
   <br />
@@ -31,13 +31,13 @@
 
   <br />
 
-  <ng-container *ngIf="getEmail().errors?.required && getEmail().dirty">
+  <ng-container *ngIf="(errors$ | async)?.email.required && getEmail().dirty">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
     ></ng-container>
   </ng-container>
 
-  <div *ngIf="getEmail().errors?.email">
+  <div *ngIf="(errors$ | async)?.email.email">
     Please enter a valid email address
   </div>
 
@@ -48,8 +48,7 @@
     😺 Email is available!
   </div>
 
-  <!-- ? Issue with extending AbstractFormControl, temporarily typed as any -->
-  <div *ngIf="getEmail().errors?.emailTaken">
+  <div *ngIf="(errors$ | async)?.email.emailTaken">
     😢 Oh noes, this email is already taken!
   </div>
 

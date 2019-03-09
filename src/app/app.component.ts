@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { fromPairs } from 'ramda';
+import { Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
 
@@ -25,6 +28,9 @@ export class AppComponent implements OnInit {
     email: '*',
   };
 
+  // errors$: Observable<ValidationErrors>;
+  errors$: Observable<any>;
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -38,6 +44,18 @@ export class AppComponent implements OnInit {
         (required, [key, isRequired]) => ({ ...required, [key]: isRequired }),
         this.required,
       );
+
+    this.errors$ = this.myForm.valueChanges.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      map(() => Object.entries(this.myForm.controls)),
+      map(controls =>
+        controls.map(([key, control]) => [key, control.errors || {}]),
+      ),
+      map(errors => fromPairs(errors as any)),
+    );
+
+    this.errors$.subscribe(console.log);
   }
 
   getName() {
