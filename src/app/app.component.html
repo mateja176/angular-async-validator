@@ -10,6 +10,12 @@
 
   <br />
 
+  <ng-container *ngIf="true">
+    <ng-container
+      *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
+    ></ng-container>
+  </ng-container>
+
   <div *ngIf="getName().errors?.minlength">
     Name has to be at least
     {{ getName().errors?.minlength?.requiredLength }} characters long
@@ -24,6 +30,12 @@
   </label>
 
   <br />
+
+  <ng-container *ngIf="true">
+    <ng-container
+      *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
+    ></ng-container>
+  </ng-container>
 
   <div *ngIf="getEmail().errors?.email">
     Please enter a valid email address
