@@ -10,7 +10,9 @@
 
   <br />
 
-  <ng-container *ngIf="(errors$ | async)?.name.required && getName().dirty">
+  <ng-container
+    *ngIf="(errors$ | async)?.name.required && (dirty$ | async)?.name"
+  >
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
     ></ng-container>
@@ -31,7 +33,9 @@
 
   <br />
 
-  <ng-container *ngIf="(errors$ | async)?.email.required && getEmail().dirty">
+  <ng-container
+    *ngIf="(errors$ | async)?.email.required && (dirty$ | async)?.email"
+  >
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
     ></ng-container>
