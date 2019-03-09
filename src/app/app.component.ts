@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as R from 'ramda';
-import { Observable, pipe } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
+
+export interface Required {
+  name: boolean;
+  email: boolean;
+}
 
 @Component({
   selector: 'app-root',
@@ -14,11 +17,8 @@ import { emails$ } from './emails.service/emails.service';
 export class AppComponent implements OnInit {
   myForm: FormGroup;
 
-  // errors$: Observable<ValidationErrors>; // ? does not accommodate for field names
-  errors$: Observable<any>;
-
   // required: { [key: string]: boolean }; // ? issue with generic object
-  required: any;
+  required: Required;
 
   constructor(private fb: FormBuilder) {}
 
@@ -32,25 +32,11 @@ export class AppComponent implements OnInit {
       ],
     });
 
-    this.required = pipe(
+    this.required = R.pipe(
       R.toPairs,
-      R.map(([key, value]) => [key, (value.errors || {}).required]),
-      R.map(([key, value]) => [key, value && '*']),
+      R.map(([key, control]) => [key, (control.errors || {}).required]),
+      R.map(([key, required]) => [key, required && '*']),
       R.fromPairs,
-    )(this.myForm.controls);
-
-    this.errors$ = this.myForm.valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      map(() =>
-        pipe(
-          R.toPairs,
-          R.map(([key, value]) => [key, value.errors]),
-          R.fromPairs,
-        )(this.myForm.controls),
-      ),
-    );
-
-    this.errors$.subscribe(console.log);
+    )(this.myForm.controls) as any; // Type '{ [index: number]: {}; }' is missing the following properties from type 'Required': name, email
   }
 }

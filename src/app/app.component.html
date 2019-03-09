@@ -4,18 +4,11 @@
 
 <form [formGroup]="myForm">
   <label>
-    Name:
+    {{ required.name }}Name:
     <input type="text" formControlName="name" />
   </label>
 
   <br />
-
-  <ng-container *ngIf="myForm.get('name').errors?.required">
-    <ng-container
-      *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
-    >
-    </ng-container>
-  </ng-container>
 
   <div *ngIf="myForm.get('name').errors?.minlength">
     Name has to be at least
@@ -26,18 +19,11 @@
   <br />
 
   <label
-    >Email:
+    >{{ required.email }}Email:
     <input type="email" formControlName="email" />
   </label>
 
   <br />
-
-  <ng-container *ngIf="myForm.get('email').errors?.required">
-    <ng-container
-      *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
-    >
-    </ng-container>
-  </ng-container>
 
   <div *ngIf="myForm.get('email').errors?.email">
     Please enter a valid email address
