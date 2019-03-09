@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import toPairs from 'ramda/es/toPairs';
-import { Observable } from 'rxjs';
+import * as R from 'ramda';
+import { Observable, pipe } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
@@ -17,6 +17,9 @@ export class AppComponent implements OnInit {
   // errors$: Observable<ValidationErrors>; // ? does not accommodate for field names
   errors$: Observable<any>;
 
+  // required: { [key: string]: boolean }; // ? issue with generic object
+  required: any;
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -29,14 +32,22 @@ export class AppComponent implements OnInit {
       ],
     });
 
+    this.required = pipe(
+      R.toPairs,
+      R.map(([key, value]) => [key, (value.errors || {}).required]),
+      R.map(([key, value]) => [key, value && '*']),
+      R.fromPairs,
+    )(this.myForm.controls);
+
     this.errors$ = this.myForm.valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
       map(() =>
-        toPairs(this.myForm.controls).reduce(
-          (errors, [key, value]) => ({ ...errors, [key]: value.errors }),
-          {},
-        ),
+        pipe(
+          R.toPairs,
+          R.map(([key, value]) => [key, value.errors]),
+          R.fromPairs,
+        )(this.myForm.controls),
       ),
     );
 
