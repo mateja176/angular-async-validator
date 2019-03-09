@@ -23,7 +23,7 @@
     😺 Email is available!
   </div>
 
-  <!-- ? Issue with extending AbstractFormControl -->
+  <!-- ? Issue with extending AbstractFormControl, temporarily typed as any -->
   <div *ngIf="myForm.get('email')?.errors?.emailTaken">
     😢 Oh noes, this email is already taken!
   </div>

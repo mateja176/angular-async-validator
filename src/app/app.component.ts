@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, mergeMap, tap } from 'rxjs/operators';
+import { checkEmailAvailability } from './is-email-taken/check-email-availability';
 
 @Component({
   selector: 'app-root',
@@ -30,8 +31,11 @@ export class AppComponent implements OnInit {
       name: ['', Validators.required],
       email: [
         '',
-        [Validators.required, Validators.email],
-        // checkEmailAvailability(emails$),
+        [
+          Validators.required,
+          Validators.email,
+          checkEmailAvailability(emails$),
+        ],
       ],
     });
 
