@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { map, mergeMap, tap } from 'rxjs/operators';
-import { checkEmailAvailability } from './is-email-taken/check-email-availability';
+import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
+import { emails$ } from './emails.service/emails.service';
 
 @Component({
   selector: 'app-root',
@@ -17,30 +17,13 @@ export class AppComponent implements OnInit {
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 
   ngOnInit() {
-    const emails$ = this.http
-      .get<{ email: string }[]>('https://jsonplaceholder.typicode.com/users')
-      .pipe(
-        mergeMap(users => users),
-        map(user => user.email),
-        tap(console.log),
-      );
-
-    emails$.subscribe();
-
     this.myForm = this.fb.group({
       name: ['', Validators.required],
       email: [
         '',
-        [
-          Validators.required,
-          Validators.email,
-          checkEmailAvailability(emails$),
-        ],
+        [Validators.required, Validators.email],
+        emailAvailabilityValidator(emails$),
       ],
     });
-
-    this.formValid$ = this.myForm.statusChanges.pipe(
-      map(status => status === 'VALID'),
-    );
   }
 }
