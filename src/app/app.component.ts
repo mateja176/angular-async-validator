@@ -1,31 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { fromPairs } from 'ramda';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
-
-export const getObservableFormFieldProperty = <A>(form: FormGroup) => (
-  property: keyof AbstractControl,
-) => (defaultValue: A) =>
-  form.valueChanges.pipe(
-    debounceTime(500),
-    distinctUntilChanged(),
-    map(() => Object.entries(form.controls)),
-    map(controls =>
-      controls.map(([key, control]) => [
-        key,
-        control[property] || defaultValue,
-      ]),
-    ),
-    map(prop => fromPairs(prop as any)),
-  );
 
 export const signupFormGroup = {
   name: ['', [Validators.required, Validators.minLength(2)]],
@@ -67,15 +44,6 @@ export class AppComponent implements OnInit {
         (required, [key, isRequired]) => ({ ...required, [key]: isRequired }),
         this.required,
       );
-
-    const observeProperty = getObservableFormFieldProperty(this.myForm);
-
-    this.errors$ = observeProperty('errors')({});
-
-    this.dirty$ = observeProperty('dirty')(false);
-
-    this.errors$.subscribe(console.log);
-    this.dirty$.subscribe(console.log);
   }
 
   submit() {
