@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fromPairs } from 'ramda';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+} from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
 
@@ -53,6 +58,10 @@ export class AppComponent implements OnInit {
         controls.map(([key, control]) => [key, control.errors || {}]),
       ),
       map(errors => fromPairs(errors as any)),
+      startWith({
+        name: {},
+        email: {},
+      }),
     );
 
     this.errors$.subscribe(console.log);

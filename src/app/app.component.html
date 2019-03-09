@@ -10,15 +10,15 @@
 
   <br />
 
-  <ng-container *ngIf="(errors$ | async)?.name.required && getName().dirty">
+  <ng-container *ngIf="(errors$ | async).name.required && getName().dirty">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
     ></ng-container>
   </ng-container>
 
-  <div *ngIf="(errors$ | async)?.name.minlength">
+  <div *ngIf="(errors$ | async).name.minlength">
     Name has to be at least
-    {{ (errors$ | async)?.name.minlength?.requiredLength }} characters long
+    {{ (errors$ | async).name.minlength?.requiredLength }} characters long
   </div>
 
   <br />
@@ -31,13 +31,13 @@
 
   <br />
 
-  <ng-container *ngIf="(errors$ | async)?.email.required && getEmail().dirty">
+  <ng-container *ngIf="(errors$ | async).email.required && getEmail().dirty">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
     ></ng-container>
   </ng-container>
 
-  <div *ngIf="(errors$ | async)?.email.email">
+  <div *ngIf="(errors$ | async).email.email">
     Please enter a valid email address
   </div>
 
@@ -48,7 +48,7 @@
     😺 Email is available!
   </div>
 
-  <div *ngIf="(errors$ | async)?.email.emailTaken">
+  <div *ngIf="(errors$ | async).email.emailTaken">
     😢 Oh noes, this email is already taken!
   </div>
 
