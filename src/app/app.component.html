@@ -4,7 +4,7 @@
 
 <form [formGroup]="myForm" (ngSubmit)="submit($event)">
   <label>
-    {{ required.name }}Name:
+    Name:
     <input type="text" formControlName="name" />
   </label>
 
@@ -25,7 +25,7 @@
   <br />
 
   <label
-    >{{ required.email }}Email:
+    >Email:
     <input type="email" formControlName="email" />
   </label>
 
