@@ -10,7 +10,7 @@
 
   <br />
 
-  <ng-container *ngIf="getName().errors?.required && getName().dirty">
+  <ng-container *ngIf="getName().errors?.required">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
     ></ng-container>
@@ -31,7 +31,7 @@
 
   <br />
 
-  <ng-container *ngIf="getEmail().errors?.required && getEmail().dirty">
+  <ng-container *ngIf="getEmail().errors?.required">
     <ng-container
       *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
     ></ng-container>
