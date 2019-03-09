@@ -3,8 +3,16 @@
     Name:
     <input type="text" formControlName="name" />
   </label>
-  <div *ngIf="myForm.get('name').errors && myForm.get('name').touched">
+  <div
+    *ngIf="myForm.get('name').errors?.required && myForm.get('name').touched"
+  >
     Name is required
+  </div>
+  <div
+    *ngIf="myForm.get('name').errors?.minlength && myForm.get('name').touched"
+  >
+    Name has to be at least
+    {{ myForm.get("name").errors?.minlength?.requiredLength }} characters long
   </div>
   <br />
   <br />
