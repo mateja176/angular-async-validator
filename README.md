@@ -11,3 +11,7 @@
 ## Issue with displaying a `{{ FieldName }} is required message` immediately
 
 It is pushy
+
+## Issue with marking required fields with an "\*"
+
+It is less declarative
