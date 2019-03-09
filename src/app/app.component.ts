@@ -1,15 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fromPairs } from 'ramda';
 import { Observable } from 'rxjs';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  startWith,
-} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
+
+export const getObservableFormFieldProperty = (form: FormGroup) => (
+  property: keyof AbstractControl,
+) =>
+  form.valueChanges.pipe(
+    debounceTime(500),
+    distinctUntilChanged(),
+    map(() => Object.entries(form.controls)),
+    map(controls =>
+      controls.map(([key, control]) => [key, control[property] || {}]),
+    ),
+    map(prop => fromPairs(prop as any)),
+  );
 
 export const signupFormGroup = {
   name: ['', [Validators.required, Validators.minLength(2)]],
@@ -36,6 +44,8 @@ export class AppComponent implements OnInit {
   // errors$: Observable<ValidationErrors>;
   errors$: Observable<any>;
 
+  dirty$: Observable<any>;
+
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
@@ -50,21 +60,13 @@ export class AppComponent implements OnInit {
         this.required,
       );
 
-    this.errors$ = this.myForm.valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      map(() => Object.entries(this.myForm.controls)),
-      map(controls =>
-        controls.map(([key, control]) => [key, control.errors || {}]),
-      ),
-      map(errors => fromPairs(errors as any)),
-      startWith({
-        name: {},
-        email: {},
-      }),
-    );
+    this.myForm.valueChanges.subscribe(() => console.log(this.myForm));
 
-    this.errors$.subscribe(console.log);
+    const observeProperty = getObservableFormFieldProperty(this.myForm);
+
+    this.errors$ = observeProperty('errors');
+
+    this.dirty$ = observeProperty('dirty');
   }
 
   submit() {
