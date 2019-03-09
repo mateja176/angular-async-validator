@@ -3,6 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { emailAvailabilityValidator } from './email-availability.validator/email-availability.validator';
 import { emails$ } from './emails.service/emails.service';
 
+export const signupFormGroup = {
+  name: ['', [Validators.required, Validators.minLength(2)]],
+  email: [
+    '',
+    [Validators.required, Validators.email],
+    emailAvailabilityValidator(emails$),
+  ],
+};
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,13 +28,15 @@ export class AppComponent implements OnInit {
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.myForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(2)]],
-      email: [
-        '',
-        [Validators.required, Validators.email],
-        emailAvailabilityValidator(emails$),
-      ],
-    });
+    this.myForm = this.fb.group(signupFormGroup);
+
+    this.required = Object.entries(this.myForm.controls)
+      .map(([key, control]) => [key, control.errors])
+      .filter(([, errors]) => !errors)
+      .map(([key]) => [key as string, ''])
+      .reduce(
+        (required, [key, isRequired]) => ({ ...required, [key]: isRequired }),
+        this.required,
+      );
   }
 }
