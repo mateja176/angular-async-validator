@@ -1,5 +1,5 @@
 <ng-template #requiredTemplate let-fieldName="name">
-  ℹ️ {{ fieldName }} is required
+  <small>ℹ️ {{ fieldName }} is required</small>
 </ng-template>
 
 <form [formGroup]="myForm" (ngSubmit)="submit($event)">
