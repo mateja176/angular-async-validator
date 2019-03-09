@@ -1,32 +1,45 @@
+<ng-template #requiredTemplate let-fieldName="name">
+  ℹ️ {{ fieldName }} is required
+</ng-template>
+
 <form [formGroup]="myForm">
   <label>
     Name:
     <input type="text" formControlName="name" />
   </label>
-  <div
-    *ngIf="myForm.get('name').errors?.required && myForm.get('name').touched"
-  >
-    Name is required
-  </div>
-  <div
-    *ngIf="myForm.get('name').errors?.minlength && myForm.get('name').touched"
-  >
+
+  <br />
+
+  <ng-container *ngIf="myForm.get('name').errors?.required">
+    <ng-container
+      *ngTemplateOutlet="requiredTemplate; context: { name: 'Name' }"
+    >
+    </ng-container>
+  </ng-container>
+
+  <div *ngIf="myForm.get('name').errors?.minlength">
     Name has to be at least
     {{ myForm.get("name").errors?.minlength?.requiredLength }} characters long
   </div>
+
   <br />
   <br />
+
   <label
     >Email:
     <input type="email" formControlName="email" />
   </label>
-  <div
-    *ngIf="
-      (myForm.get('email').errors?.required ||
-        myForm.get('email').errors?.email) &&
-      myForm.get('email').touched
-    "
-  >
+
+  <br />
+
+  <ng-container *ngIf="myForm.get('email').errors?.required">
+    <ng-container
+      *ngTemplateOutlet="requiredTemplate; context: { name: 'Email' }"
+    >
+    </ng-container>
+  </ng-container>
+
+  <div *ngIf="myForm.get('email').errors?.email">
     Please enter a valid email address
   </div>
 
@@ -41,8 +54,10 @@
   <div *ngIf="myForm.get('email').errors?.emailTaken">
     😢 Oh noes, this email is already taken!
   </div>
+
   <br />
   <br />
+
   <input type="submit" [disabled]="!myForm.valid" />
 </form>
 
