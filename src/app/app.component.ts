@@ -39,4 +39,12 @@ export class AppComponent implements OnInit {
         this.required,
       );
   }
+
+  getName() {
+    return this.myForm.get('name');
+  }
+
+  getEmail() {
+    return this.myForm.get('email');
+  }
 }
